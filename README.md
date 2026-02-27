@@ -129,5 +129,4 @@ docker compose up -d
 
 ---
 ### 공부 기록
-- 26.02.27 spring-cloud-stream
-  - spring-cloud-stream 설정, 메시지 템플릿 생성
+- 26.02.27 spring-cloud-stream 완강
