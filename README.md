@@ -1,6 +1,6 @@
 ---
 ### 공부 기록
-- 26.02.27 spring-cloud-stream 완강
+- 26.02.27 spring-cloud-stream 완강 -> spring-cloud-stream 브랜치
 
 
 ---
