@@ -1,3 +1,9 @@
+---
+### 공부 기록
+- 26.02.27 spring-cloud-stream 완강
+
+
+---
 Fast Campus [한번에 끝내는 Kafka Ecosystem](https://fastcampus.co.kr/dev_online_newkafka) 강의의 Part 2-1. 백엔드 개발자의 메시징큐 교육용 자료입니다.
 
 # Part 2-1. 백엔드 개발자의 메시징큐
@@ -127,6 +133,3 @@ docker compose up -d
 
 
 
----
-### 공부 기록
-- 26.02.27 spring-cloud-stream 완강
