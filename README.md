@@ -124,3 +124,10 @@ docker compose up -d
   - root password: `1234`
   - database: `campus`
   - User/PW: `myuser`/`mypassword`
+
+
+
+---
+### 공부 기록
+- 26.02.27 spring-cloud-stream
+  - spring-cloud-stream 설정, 메시지 템플릿 생성
