@@ -130,6 +130,108 @@ docker compose up -d
   - root password: `1234`
   - database: `campus`
   - User/PW: `myuser`/`mypassword`
+---
+프로젝트 핵심 요약
+
+🎯 프로젝트 핵심 구조 요약
+
+📊 2개의 Producer/Consumer 세트
+
+세트 1: My~ (JSON 방식)              세트 2: MySecond~ (String 방식)
+─────────────────────────              ──────────────────────────────
+[KafkaConfig]                          [SecondKafkaConfig]
+↓                                      ↓
+[MyProducer]                           [MySecondProducer]
+- KafkaTemplate<String, MyMessage>     - KafkaTemplate<String, String>
+- 토픽: my-json-topic                   - 토픽: my-second-topic
+- JSON 직렬화                           - String 직렬화
+↓                                      ↓
+[Kafka Cluster]                        [Kafka Cluster]
+↓                                      ↓
+[MyConsumer]                           [MySecondConsumer]
+- @KafkaListener(my-json-topic)        - @KafkaListener(my-second-topic)
+- JSON 역직렬화                         - String 역직렬화
+- ConsumerRecord<String, MyMessage>    - ConsumerRecord<String, MyMessage>
+
+💡 각 세트의 핵심 차이점
+
+| 구분            | 세트 1 (My~)                       | 세트 2 (MySecond~)              |
+  |---------------|----------------------------------|-------------------------------|
+| Config 파일     | KafkaConfig.java                 | SecondKafkaConfig.java        |
+| yml 설정        | spring.kafka.json                | spring.kafka.string           |
+| 토픽            | my-json-topic                    | my-second-topic               |
+| 메시지 타입        | MyMessage 객체                     | String                        |
+| Serializer    | JsonSerializer                   | StringSerializer              |
+| Deserializer  | JsonDeserializer                 | StringDeserializer            |
+| KafkaTemplate | KafkaTemplate<String, MyMessage> | KafkaTemplate<String, String> |
+| ACKs          | 1 (리더만 확인)                       | 0 (확인 안함)                     |
+| Bean 이름       | 기본 (Qualifier 없음)                | @Qualifier("second~")         |
+
+🎓 이렇게 구성한 의도
+
+1️⃣ 다양한 직렬화 방식 학습
+
+// JSON 직렬화 (복잡한 객체)
+MyMessage message = new MyMessage(1, 30, "홍길동", "내용");
+myProducer.sendMessage(message);  // 객체 → JSON
+
+// String 직렬화 (단순 문자열)
+mySecondProducer.sendMessageWithKey("key1", "Hello World");  // String → String
+
+2️⃣ 여러 토픽 동시 운영 학습
+
+- 실무에서는 하나의 앱이 여러 토픽을 사용하는 경우가 많음
+- 각 토픽마다 다른 설정(직렬화, ACK 등)이 필요할 수 있음
+
+3️⃣ 다중 Config 설정 패턴 학습
+
+// 같은 타입의 Bean이 여러 개일 때 @Qualifier로 구분
+@Qualifier("secondKafkaProperties")        // spring.kafka.string 설정 사용
+@Qualifier("secondConsumerFactory")        // String용 ConsumerFactory
+@Qualifier("secondKafkaListenerContainerFactory")  // String용 Listener
+
+4️⃣ 서로 다른 ACK 전략 비교
+
+- 세트 1: acks: 1 → 리더 브로커가 저장 확인 후 응답 (안정성 중간)
+- 세트 2: acks: 0 → 확인 안함 (속도 빠름, 안정성 낮음)
+
+5️⃣ 실무 시나리오 시뮬레이션
+
+시나리오 1 (JSON): 주문 데이터 같은 복잡한 객체 전송
+→ MyProducer/MyConsumer 사용
+
+시나리오 2 (String): 간단한 로그/이벤트 문자열 전송
+→ MySecondProducer/MySecondConsumer 사용
+
+🏗️ application.yml 구조
+
+spring:
+kafka:
+json:    # ← 세트 1 (My~) 설정
+bootstrap-servers: localhost:9092, ...
+consumer:
+value-deserializer: JsonDeserializer
+producer:
+value-serializer: JsonSerializer
+acks: 1
+
+      string:  # ← 세트 2 (MySecond~) 설정
+        bootstrap-servers: localhost:9092, ...
+        consumer:
+          value-deserializer: StringDeserializer
+        producer:
+          value-serializer: StringSerializer
+          acks: 0
+
+🎯 핵심 학습 포인트
+
+"하나의 애플리케이션에서 서로 다른 방식으로 메시지를 주고받는 법 학습"
+
+- ✅ JSON vs String 직렬화 차이
+- ✅ 여러 토픽 동시 관리
+- ✅ Bean Qualifier로 설정 분리
+- ✅ ACK 전략 비교
+- ✅ 실무에서 자주 쓰는 다중 설정 패턴
 
 
 

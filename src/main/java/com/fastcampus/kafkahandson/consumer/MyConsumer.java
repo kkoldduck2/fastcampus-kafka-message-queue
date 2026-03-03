@@ -18,7 +18,7 @@ public class MyConsumer {
     )
     public void accept(ConsumerRecord<String, MyMessage> message) {
         // 이 컨슈머의 역할은 메시지를 받아서 그 메시지를 그냥 프린트로 찍어주는 역할만 한다.
-        System.out.println("Message arrived! - " + message.value());
+        System.out.println("[Main Consumer] Message arrived! - " + message.value());
         // TODO message.getHeaders() 도 찍어보기
     }
 }
