@@ -1,7 +1,7 @@
 version: '3'
 services:
   zookeeper:
-    image: 'bitnami/zookeeper:3.7.2'
+    image: 'bitnamilegacy/zookeeper:3.7'
     container_name: zookeeper
     ports:
       - 2181:2181
@@ -12,7 +12,7 @@ services:
       - ./.data/zookeeper/datalog:/bitnami/zookeeper/datalog
       - ./.data/zookeeper/logs:/bitnami/zookeeper/logs
   kafka1:
-    image: 'bitnami/kafka:3.6.0'
+    image: 'bitnamilegacy/kafka:3.6'
     container_name: kafka1
     hostname: kafka1
     ports:
@@ -31,7 +31,7 @@ services:
     volumes:
       - ./.data/kafka1:/bitnami/kafka/data
   kafka2:
-    image: 'bitnami/kafka:3.6.0'
+    image: 'bitnamilegacy/kafka:3.6'
     container_name: kafka2
     ports:
       - 19092
@@ -49,7 +49,7 @@ services:
     volumes:
       - ./.data/kafka2:/bitnami/kafka/data
   kafka3:
-    image: 'bitnami/kafka:3.6.0'
+    image: 'bitnamilegacy/kafka:3.6'
     container_name: kafka3
     ports:
       - 19092
